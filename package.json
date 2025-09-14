@@ -1,0 +1,15 @@
+{
+  "name": "football-prediction-app",
+  "version": "1.0.0",
+  "description": "A web app for football predictions using API-SPORTS data",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["football", "predictions", "sports"],
+  "author": "Your Name",
+  "license": "MIT"
+}
