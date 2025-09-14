@@ -2,14 +2,10 @@
   "name": "football-prediction-app",
   "version": "1.0.0",
   "description": "A web app for football predictions using API-SPORTS data",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
+    "build": "echo 'No build step needed for static site'"
   },
   "keywords": ["football", "predictions", "sports"],
-  "author": "Engr. Jude C. Ajieh",
+  "author": "Jude Chukwunalu Ajieh",
   "license": "MIT"
 }
