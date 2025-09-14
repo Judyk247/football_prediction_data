@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Football Prediction App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --gray: #7f8c8d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            margin: 15px 0 10px;
+            color: var(--dark);
+        }
+        
+        .app-description {
+            color: var(--light);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+        
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .slider-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background 0.3s, transform 0.2s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background: #27ae60;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .prediction-output {
+            margin-top: 20px;
+        }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .team {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .team-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            color: var(--dark);
+        }
+        
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border-radius: 50%;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .vs {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gray);
+            margin: 0 15px;
+        }
+        
+        .predicted-score {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--dark);
+            text-align: center;
+            margin: 15px 0;
+            background: var(--light);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .confidence {
+            display: inline-block;
+            padding: 6px 15px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .prediction-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .prediction-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .prediction-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .prediction-type {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+        
+        .prediction-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .probability {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 0.85rem;
+            padding: 15px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .league-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .fixtures-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .fixture-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .fixture-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .fixture-item:last-child {
+            border-bottom: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: var(--warning);
+            color: white;
+            text-align: center;
+        }
+        
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .date-selector input {
+            flex: 1;
+        }
+        
+        .api-key-container {
+            margin-bottom: 15px;
+        }
+        
+        .team-id {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                flex-direction: row;
+            }
+            
+            .parameters-panel {
+                flex: 1;
+            }
+            
+            .prediction-result {
+                flex: 2;
+            }
+            
+            .container {
+                max-width: 1200px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-futbol"></i> Live Football Prediction App</h1>
+            <p class="app-description">Select leagues and teams to generate accurate football predictions</p>
+        </header>
+        
+        <div class="notification">
+            <i class="fas fa-info-circle"></i> Using API Key: 15H12 (API-SPORTS) to fetch live football data
+        </div>
+        
+        <div class="main-content">
+            <div class="card parameters-panel">
+                <h2><i class="fas fa-sliders-h"></i> Match Parameters</h2>
+                
+                <div class="form-group">
+                    <label for="league"><i class="fas fa-trophy"></i> Select League</label>
+                    <select id="league">
+                        <option value="">-- Select a League --</option>
+                        <option value="39">English Premier League</option>
+                        <option value="140">Spanish La Liga</option>
+                        <option value="135">Italian Serie A</option>
+                        <option value="78">German Bundesliga</option>
+                        <option value="61">French Ligue 1</option>
+                        <option value="94">Portuguese Primeira Liga</option>
+                        <option value="88">Dutch Eredivisie</option>
+                        <option value="235">Russian Premier Liga</option>
+                        <option value="1">Australian A-League</option>
+                        <option value="2">Australian NPL</option>
+                        <option value="253">MLS (USA & Canada)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group date-selector">
+                    <div>
+                        <label for="fromDate"><i class="fas fa-calendar"></i> From Date</label>
+                        <input type="date" id="fromDate">
+                    </div>
+                    <div>
+                        <label for="toDate"><i class="fas fa-calendar"></i> To Date</label>
+                        <input type="date" id="toDate">
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary" id="fetchFixturesBtn">
+                    <i class="fas fa-sync-alt"></i> Fetch Fixtures
+                </button>
+                
+                <div class="form-group">
+                    <label for="fixture"><i class="fas fa-calendar-alt"></i> Select Fixture</label>
+                    <select id="fixture" disabled>
+                        <option value="">-- Select a Fixture --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="homeForm">Home Team Recent Form (1-10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="homeForm" min="1" max="10" value="7">
+                        <span class="slider-value" id="homeFormValue">7</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="awayForm">Away Team Recent Form (1-10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="awayForm" min="1" max="10" value="5">
+                        <span class="slider-value" id="awayFormValue">5</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="homeInjuries">Home Team Key Injuries</label>
+                    <select id="homeInjuries">
+                        <option value="0">None</option>
+                        <option value="1">1-2 Key Players</option>
+                        <option value="2">3+ Key Players</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="awayInjuries">Away Team Key Injuries</label>
+                    <select id="awayInjuries">
+                        <option value="0">None</option>
+                        <option value="1">1-2 Key Players</option>
+                        <option value="2">3+ Key Players</option>
+                    </select>
+                </div>
+                
+                <button class="btn" id="predictBtn"><i class="fas fa-calculator"></i> Generate Prediction</button>
+                <button class="btn btn-warning" id="clearBtn"><i class="fas fa-trash"></i> Clear All</button>
+            </div>
+            
+            <div class="card prediction-result">
+                <div class="loading" id="mainLoading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Calculating predictions...</p>
+                </div>
+                
+                <div class="result-content">
+                    <h2><i class="fas fa-chart-line"></i> Prediction Result</h2>
+                    
+                    <div class="match-header">
+                        <div class="team">
+                            <div class="team-logo" id="homeLogo">H</div>
+                            <div class="team-name" id="homeName">Select Teams</div>
+                            <div class="team-id" id="homeId"></div>
+                        </div>
+                        
+                        <div class="vs">VS</div>
+                        
+                        <div class="team">
+                            <div class="team-logo" id="awayLogo">A</div>
+                            <div class="team-name" id="awayName">Select Teams</div>
+                            <div class="team-id" id="awayId"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="predicted-score">- -</div>
+                    
+                    <div class="prediction-output">
+                        <p>Expected Winner: <strong id="winner">-</strong></p>
+                        <p>Match Outlook: <strong id="outlook">-</strong></p>
+                        <span class="confidence">Confidence: -%</span>
+                    </div>
+                    
+                    <div class="section">
+                        <h3><i class="fas fa-futbol"></i> Goal Predictions</h3>
+                        <div class="prediction-cards">
+                            <div class="prediction-card">
+                                <div class="prediction-type">Over 0.5 Goals</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Over 1.5 Goals</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Over 2.5 Goals</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Under 2.5 Goals</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3><i class="fas fa-vector-square"></i> Corner Predictions</h3>
+                        <div class="prediction-cards">
+                            <div class="prediction-card">
+                                <div class="prediction-type">Total Corners</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Home Corners</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Away Corners</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                            <div class="prediction-card">
+                                <div class="prediction-type">Over 9.5 Corners</div>
+                                <div class="prediction-value">-</div>
+                                <div class="probability">- probability</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3><i class="fas fa-chart-bar"></i> Team Statistics</h3>
+                        <div class="stats-container">
+                            <div class="stat-box">
+                                <div class="stat-value" id="homeAvgGoals">-</div>
+  
